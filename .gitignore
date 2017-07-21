@@ -1,0 +1,18 @@
+# Java
+*.jar
+*.class
+**/bin/**
+
+# Intellij
+#**/.idea/workspace.xml
+#**/.idea/libraries
+#**/.idea/tasks.xml
+.idea/
+
+# Eclipse
+.classpath
+.project
+.metadata/
+.settings/
+.recommenders/
+
