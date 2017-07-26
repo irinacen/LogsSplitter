@@ -2,6 +2,7 @@ import static java.util.Arrays.asList;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Class representing each trace line from logs.
@@ -16,25 +17,30 @@ public class LogLine implements Comparable<LogLine>
 	
 	public static final String DEFAULT_TIME_PATTERN = "dd-MM-yyyy HH:mm:ss,SSS";	
 	
-	public static SimpleDateFormat usedTimeFormat;
-	
+	private static SimpleDateFormat usedTimeFormat;
+	private Date lineTimestamp;
 	private String lineContent;
 	
-	public LogLine(String line)
+	public LogLine(String line) throws Exception
 	{
-		//TODO: Check usedTimeFormat in given line.
-		
-		this.setLineContent(line);
-	
+		// Check timestamp format and save it if it is ok.
+		String[] dateStr = line.split(" ");
+		try
+		{
+			this.setLineTimestamp(usedTimeFormat.parse(dateStr[0] + " " + dateStr[1]));
+			this.setLineContent(line);
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Invalid time format in log line: '" + line + "'. Current pattern in use is '" + LogLine.getUsedTimeFormatPattern() + "'.", e);
+		}
 	}
 		
 	@Override
 	public int compareTo(final LogLine logLine)
 	{
-		// TODO: Order by date. 
-		//this.lineContent.split(regex)
-		
-		return 1;
+		// We want order logLines by time chronologically, so we can simply call to compareTo method of Date.
+		return this.getLineTimestamp().compareTo(logLine.getLineTimestamp());
 	}
 
 	public String getLineContent()
@@ -46,5 +52,31 @@ public class LogLine implements Comparable<LogLine>
 	{
 		this.lineContent = lineContent;
 	}
+
+	public static SimpleDateFormat getUsedTimeFormat()
+	{
+		return usedTimeFormat;
+	}
+	
+	public static String getUsedTimeFormatPattern()
+	{
+		return usedTimeFormat.toPattern();
+	}
+
+	public static void setUsedTimeFormat(SimpleDateFormat usedTimeFormat)
+	{
+		LogLine.usedTimeFormat = usedTimeFormat;
+	}
+
+	public Date getLineTimestamp()
+	{
+		return lineTimestamp;
+	}
+
+	public void setLineTimestamp(Date timestamp)
+	{
+		this.lineTimestamp = timestamp;
+	}
+
 
 }

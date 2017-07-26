@@ -23,11 +23,13 @@ Example of trace in input file:
 USAGE:
 ------
 
-LogsSplitter <inputFolder> <outputFolder> <timePattern>
+LogsSplitter {inputFolder} {outputFolder} {timePattern}
 
 Mandatory arguments:
+
 inputFolder		- Folder containing input log files. All files in folder will be processed, so the folder should contain only the log files.
 outputFolder	- Folder where the resulting log files will be saved.
 
 Optional arguments:
+
 timePattern		- Regular expresion to be used to parse timestamp in the log files. Valid patterns are: ("dd-MM-yyyy HH:mm:ss,SSS", "dd-MM HH:mm:ss,SSS", "dd-MM-yyyy HH:mm:ss", "dd-MM HH:mm:ss"). If no pattern is specified, the default pattern will be used: "dd-MM-yyyy HH:mm:ss,SSS".

@@ -25,43 +25,37 @@ public class LogsSplitter
 	private static String inputFolder;
 	private static String outputFolder;
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
-		try
+		LogsSplitter logsSplitter =  new LogsSplitter();
+		
+		if(logsSplitter.checkInputParameters(args) == true)
 		{
-			LogsSplitter logsSplitter =  new LogsSplitter();
-			
-			if(logsSplitter.checkInputParameters(args) == true)
-			{
-				ArrayList<File> filesToBeProcessed = new ArrayList<File>();
-				logsSplitter.getInputFilesNames(inputFolder, filesToBeProcessed);
-				if(filesToBeProcessed.size() > 0)
-				{					
-					LinkedHashMap<String, TreeSet<LogLine>> processedLogFiles = new LinkedHashMap<String, TreeSet<LogLine>>();
-					logsSplitter.processLogFiles(filesToBeProcessed, processedLogFiles);
-					logsSplitter.saveOutputFiles(outputFolder, processedLogFiles);
-				}
-				else
-				{
-					System.out.println("No files to be processed found in '" + inputFolder + "'.");
-				}
+			ArrayList<File> filesToBeProcessed = new ArrayList<File>();
+			logsSplitter.getInputFilesNames(inputFolder, filesToBeProcessed);
+			if(filesToBeProcessed.size() > 0)
+			{					
+				LinkedHashMap<String, TreeSet<LogLine>> processedLogFiles = new LinkedHashMap<String, TreeSet<LogLine>>();
+				logsSplitter.processLogFiles(filesToBeProcessed, processedLogFiles);
+				logsSplitter.saveOutputFiles(outputFolder, processedLogFiles);
 			}
 			else
 			{
-				System.err.println("Incorrect arguments! Relaunch application giving the correct parameters.");
-				logsSplitter.showUsage();
+				System.out.println("ERROR: No files to be processed found in '" + inputFolder + "'.");
 			}
 		}
-		catch (Exception e)
+		else
 		{
-			System.err.println("Something was wrong processing files: ");
-			e.printStackTrace();
-		}		
+			System.err.println("ERROR: Incorrect arguments! Relaunch application giving the correct parameters.");
+			logsSplitter.showUsage();
+		}
 	}
 	
 	/**
 	 * Check if the received args are valid and if so, stored them in variables.
+	 * 
 	 * @param args
+	 * 
 	 * @return true if the number and content of input is right, false otherwise.
 	 */
 	private boolean checkInputParameters(final String[] args)
@@ -77,7 +71,7 @@ public class LogsSplitter
 			
 			if (inputFolder.equals(outputFolder))
 			{
-				System.err.println("Error: input and output folders can not be the same.");
+				System.err.println("ERROR: input and output folders can not be the same.");
 				return false;
 			}
 			
@@ -85,19 +79,19 @@ public class LogsSplitter
 			{
 				if(LogLine.VALID_TIME_PATTERNS.contains(args[2]))
 				{
-					LogLine.usedTimeFormat = new SimpleDateFormat(args[2]);
+					LogLine.setUsedTimeFormat(new SimpleDateFormat(args[2]));
 					return true;
 				}
 				else
 				{
-					System.err.println("Error: invalid timePattern '" + args[2] + "'.");
+					System.err.println("ERROR: invalid timePattern '" + args[2] + "'.");
 					return false;
 				}
 			}
 			else
 			{
 				System.out.println("No time pattern provided. Using default (" + LogLine.DEFAULT_TIME_PATTERN + ").");
-				LogLine.usedTimeFormat = new SimpleDateFormat(LogLine.DEFAULT_TIME_PATTERN);
+				LogLine.setUsedTimeFormat(new SimpleDateFormat(LogLine.DEFAULT_TIME_PATTERN));
 				return true;
 			}
 		}
@@ -116,13 +110,13 @@ public class LogsSplitter
 		usage += "\n\n Optional arguments:";
 		usage += "\n timePattern \t - Regular expresion to be used to parse timestamp in the log files. "
 				+ "Valid patterns are: " + LogLine.VALID_TIME_PATTERNS + ". "
-				+ "If no pattern is specified, the default pattern will be used: " + LogLine.usedTimeFormat.toPattern();		
+				+ "If no pattern is specified, the default pattern will be used: " + LogLine.getUsedTimeFormatPattern();		
 		
 		System.out.println(usage);		
 	}
 	
 	/**
-	 * Recursive method to get and store the file names in the given input folder.
+	 * Recursive method to get and store the file names inside the given input folder.
 	 * 
 	 * @param folderName Folder containing the input files.
 	 * @param filesToBeProcessed List to store the files to be processed.
@@ -145,9 +139,12 @@ public class LogsSplitter
 	}
 	
 	/**
-	 * Process all log files soretering it by thread in an ordered collection, ordering also the log lines inside log file.
-	 * @param filesToBeProcessed
-	 * @param processedLogFiles
+	 * Process all log files sortering it by thread in an ordered and no key duplicated hashmap. 
+	 * The value of hashmap is a set of LogLine, whcih will be ordered automatically immplementing the comparable interface.
+	 * 
+	 * @param filesToBeProcessed List of files to be processed.
+	 * @param processedLogFiles HashMap where the result will be saved.
+	 * 
 	 * @throws Exception
 	 */
 	private void processLogFiles(final ArrayList<File> filesToBeProcessed, LinkedHashMap<String, TreeSet<LogLine>> processedLogFiles) throws Exception
@@ -170,7 +167,7 @@ public class LogsSplitter
 					}
 					catch (Exception e)
 					{
-						throw new Exception("Thread name not found in line: '" + line + "'.");
+						throw new Exception("Thread name not found in line: '" + line + "'.", e);
 					}
 					
 					if(processedLogFiles.containsKey(threadName))
@@ -194,6 +191,14 @@ public class LogsSplitter
 	}
 
 
+	/**
+	 * Save the processed (separated by thread and ordered by date) files by thread in the folder specified as outputFolder.
+	 * 
+	 * @param outputFolder Folder where save the resulting files.
+	 * @param processedLogFiles HashMap with the processed files.
+	 * 
+	 * @throws IOException
+	 */
 	private void saveOutputFiles(final String outputFolder, final LinkedHashMap<String, TreeSet<LogLine>> processedLogFiles) throws IOException
 	{
 		for (Map.Entry<String, TreeSet<LogLine>> entry : processedLogFiles.entrySet()) {
