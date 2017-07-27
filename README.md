@@ -13,9 +13,9 @@ The name of each thread in the trace, which will be used to sort and create each
 
 The input directory should contains only the log files to be processed (subfolders are allowed).
 
-The number of output files will be the same number of threads inside log files. Thus is, one output file per thread.
-
 The output directory is received as parameter too.
+
+The number of output files will be the same number of threads inside log files. Thus is, one output file per thread.
 
 Example of trace in input file: 24-07-2017 21:45:50 INFO [Thread9] Blah blah blah SomeText: '25' hello(0).  
 
