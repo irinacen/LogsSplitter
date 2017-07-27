@@ -17,7 +17,8 @@ The output directory is received as parameter too.
 
 The number of output files will be the same number of threads inside log files. Thus is, one output file per thread.
 
-Example of trace in input file: 24-07-2017 21:45:50 INFO [Thread9] Blah blah blah SomeText: '25' hello(0).  
+Example of trace in input file: 
+24-07-2017 21:45:50 INFO [Thread9] Blah blah blah SomeText: '25' hello(0).  
 
 USAGE:
 ------
