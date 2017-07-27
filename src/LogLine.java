@@ -14,10 +14,7 @@ public class LogLine implements Comparable<LogLine>
 {
 	public static ArrayList<String> VALID_TIME_PATTERNS = new ArrayList<String>(
 			asList("dd-MM-yyyy HH:mm:ss,SSS", "dd-MM HH:mm:ss,SSS", "dd-MM-yyyy HH:mm:ss", "dd-MM HH:mm:ss"));
-	
-	public static final String DEFAULT_TIME_PATTERN = "dd-MM-yyyy HH:mm:ss,SSS";	
-	
-	private static SimpleDateFormat usedTimeFormat;
+
 	private Date lineTimestamp;
 	private String lineContent;
 	
@@ -30,16 +27,27 @@ public class LogLine implements Comparable<LogLine>
 	 */
 	public LogLine(String line) throws Exception
 	{
-		// Check timestamp format and save it if it is ok.
-		String[] dateStr = line.split(" ");
-		try
+		// Check timestamp of received line against valid patterns.
+		SimpleDateFormat timeFormat; 
+		boolean validPattern = false;
+		
+		// This does not give us good performance, but in this case we prefer usability.
+		for (String pattern : VALID_TIME_PATTERNS)
 		{
-			this.setLineTimestamp(usedTimeFormat.parse(dateStr[0] + " " + dateStr[1]));
-			this.setLineContent(line);
+			String[] dateStr = line.split(" ");
+			try
+			{
+				timeFormat = new SimpleDateFormat(pattern);
+				this.setLineTimestamp(timeFormat.parse(dateStr[0] + " " + dateStr[1]));				
+				this.setLineContent(line);
+				validPattern = true;
+			}
+			catch(Exception e) {} // Nothing to doing here.
 		}
-		catch(Exception e)
+		
+		if(!validPattern)
 		{
-			throw new Exception("Invalid time format in log line: '" + line + "'. Current pattern in use is '" + LogLine.getUsedTimeFormatPattern() + "'.", e);
+			throw new Exception("Invalid time format in log line: '" + line + "'. Valid patterns are: " + VALID_TIME_PATTERNS + ".");
 		}
 	}
 		
@@ -58,21 +66,6 @@ public class LogLine implements Comparable<LogLine>
 	public void setLineContent(String lineContent)
 	{
 		this.lineContent = lineContent;
-	}
-
-	public static SimpleDateFormat getUsedTimeFormat()
-	{
-		return usedTimeFormat;
-	}
-	
-	public static String getUsedTimeFormatPattern()
-	{
-		return usedTimeFormat.toPattern();
-	}
-
-	public static void setUsedTimeFormat(SimpleDateFormat usedTimeFormat)
-	{
-		LogLine.usedTimeFormat = usedTimeFormat;
 	}
 
 	public Date getLineTimestamp()

@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 
 /**
  * Main class that reads all the log files of a given directory and reorganizes it in new files separating it 
@@ -74,26 +73,7 @@ public class LogsSplitter
 				System.err.println("ERROR: input and output folders can not be the same.");
 				return false;
 			}
-			
-			if (args.length == 3)
-			{
-				if(LogLine.VALID_TIME_PATTERNS.contains(args[2]))
-				{
-					LogLine.setUsedTimeFormat(new SimpleDateFormat(args[2]));
-					return true;
-				}
-				else
-				{
-					System.err.println("ERROR: invalid timePattern '" + args[2] + "'.");
-					return false;
-				}
-			}
-			else
-			{
-				System.out.println("No time pattern provided. Using default (" + LogLine.DEFAULT_TIME_PATTERN + ").");
-				LogLine.setUsedTimeFormat(new SimpleDateFormat(LogLine.DEFAULT_TIME_PATTERN));
-				return true;
-			}
+			return true;
 		}
 	}
 
@@ -103,14 +83,9 @@ public class LogsSplitter
 	private void showUsage()
 	{
 		String usage = new String("Usage:");
-		usage += "\n\n LogsSplitter <inputFolder> <outputFolder> <timePattern>";
-		usage += "\n\n Mandatory arguments:";
+		usage += "\n\n LogsSplitter <inputFolder> <outputFolder>";
 		usage += "\n inputFolder \t - Folder containing input log files. All files in folder will be processed, so the folder should contain only the log files.";
 		usage += "\n outputFolder \t - Folder where the resulting log files will be saved.";
-		usage += "\n\n Optional arguments:";
-		usage += "\n timePattern \t - Regular expresion to be used to parse timestamp in the log files. "
-				+ "Valid patterns are: " + LogLine.VALID_TIME_PATTERNS + ". "
-				+ "If no pattern is specified, the default pattern will be used: " + LogLine.getUsedTimeFormatPattern();		
 		
 		System.out.println(usage);		
 	}
