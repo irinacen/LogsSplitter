@@ -21,6 +21,13 @@ public class LogLine implements Comparable<LogLine>
 	private Date lineTimestamp;
 	private String lineContent;
 	
+	/**
+	 * Creates a new LogLine containing the text received as line. 
+	 * The line should contains something like:
+	 * 24-07-2017 21:45:50 INFO [Thread9] Blah blah blah SomeText: '25' hello(0).  
+	 * @param line
+	 * @throws Exception
+	 */
 	public LogLine(String line) throws Exception
 	{
 		// Check timestamp format and save it if it is ok.
