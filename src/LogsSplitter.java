@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -84,8 +85,8 @@ public class LogsSplitter
 	{
 		String usage = new String("Usage:");
 		usage += "\n\n LogsSplitter <inputFolder> <outputFolder>";
-		usage += "\n inputFolder \t - Folder containing input log files. All files in folder will be processed, so the folder should contain only the log files.";
-		usage += "\n outputFolder \t - Folder where the resulting log files will be saved.";
+		usage += "\n inputFolder \t - Folder containing input log files. All files in folder will be processed, so the folder should contain only the log files. Spaces in folder name are not allowed.";
+		usage += "\n outputFolder \t - Folder where the resulting log files will be saved. Spaces in folder name are not allowed.";
 		
 		System.out.println(usage);		
 	}
@@ -99,6 +100,7 @@ public class LogsSplitter
 	private void getInputFilesNames(final String folderName, ArrayList<File> filesToBeProcessed)
 	{
 		File folder = new File(folderName);
+		System.out.println("Getting files from: " + folderName);
 		
 		for (final File fileEntry : folder.listFiles())
 		{
@@ -181,7 +183,7 @@ public class LogsSplitter
 		    String fileName = entry.getKey();
 		    TreeSet<LogLine> fileLines = entry.getValue();
 		    
-		    File fileToBeWrited = new File(outputFolder + File.separator + fileName);
+		    File fileToBeWrited = new File(outputFolder + File.separator + fileName +".log");
 			FileOutputStream fos = new FileOutputStream(fileToBeWrited);
 		 
 			System.out.println("Saving file '" + fileToBeWrited.getAbsolutePath() + "' ...");
