@@ -17,8 +17,7 @@ The number of output files will be the same number of threads inside log files. 
 
 The output directory is received as parameter too.
 
-Example of trace in input file: 
-24-07-2017 21:45:50 INFO [Thread9] Blah blah blah SomeText: '25' hello(0).  
+Example of trace in input file: 24-07-2017 21:45:50 INFO [Thread9] Blah blah blah SomeText: '25' hello(0).  
 
 USAGE:
 ------
@@ -32,4 +31,4 @@ outputFolder	- Folder where the resulting log files will be saved.
 
 Optional arguments:
 
-timePattern		- Regular expresion to be used to parse timestamp in the log files. Valid patterns are: ("dd-MM-yyyy HH:mm:ss,SSS", "dd-MM HH:mm:ss,SSS", "dd-MM-yyyy HH:mm:ss", "dd-MM HH:mm:ss"). If no pattern is specified, the default pattern will be used: "dd-MM-yyyy HH:mm:ss,SSS".
+timePattern		- Regular expresion to be used to parse timestamp in the log files. Valid patterns are: ("dd-MM-yyyy HH:mm:ss,SSS", "dd-MM HH:mm:ss,SSS", "dd-MM-yyyy HH:mm:ss", "dd-MM HH:mm:ss"). If no pattern is specified, the default pattern will be used ("dd-MM-yyyy HH:mm:ss,SSS").

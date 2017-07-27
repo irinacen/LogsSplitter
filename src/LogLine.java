@@ -77,6 +77,4 @@ public class LogLine implements Comparable<LogLine>
 	{
 		this.lineTimestamp = timestamp;
 	}
-
-
 }
