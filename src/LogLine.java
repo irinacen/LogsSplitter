@@ -55,8 +55,19 @@ public class LogLine implements Comparable<LogLine>
 	@Override
 	public int compareTo(final LogLine logLine)
 	{
-		// We want order logLines by time chronologically, so we can simply call to compareTo method of Date.
-		return this.getLineTimestamp().compareTo(logLine.getLineTimestamp());
+		// We want order logLines by time chronologically, so we can call to compareTo method of Date.
+		int compareDateValue = this.getLineTimestamp().compareTo(logLine.getLineTimestamp());
+		// But if the date is exactly the same, 0 can not be returned cause we need both lines in the output.
+		if (compareDateValue == 0)
+		{
+			// If current line and input line have exactly same timestamp, is assumed that input line was written before current in
+			// original log file, so we return 1.
+			return 1;
+		}
+		else
+		{
+			return compareDateValue;
+		}
 	}
 
 	public String getLineContent()
