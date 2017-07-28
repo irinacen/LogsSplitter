@@ -178,6 +178,12 @@ public class LogsSplitter
 	 */
 	private void saveOutputFiles(final String outputFolder, final LinkedHashMap<String, TreeSet<LogLine>> processedLogFiles) throws IOException
 	{
+		File outFolder = new File(outputFolder);
+		if (!outFolder.exists())
+		{
+			outFolder.mkdir();
+		}
+		
 		for (Map.Entry<String, TreeSet<LogLine>> entry : processedLogFiles.entrySet()) {
 			
 		    String fileName = entry.getKey();
